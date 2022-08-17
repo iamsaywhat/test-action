@@ -1,0 +1,25 @@
+{
+    "name": "publish-bundle-action",
+    "version": "0.0.0",
+    "description": "Publish bundle",
+    "main": "index.js",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/iamsaywhat/publish-bundle-action.git"
+    },
+    "keywords": [
+      "GitHub",
+      "Actions",
+      "JavaScript"
+    ],
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/iamsaywhat/publish-bundle-action/issues"
+    },
+    "homepage": "https://github.com/iamsaywhat/publish-bundle-action#readme",
+    "dependencies": {
+      "@actions/core": "^1.9.1",
+      "@actions/github": "^5.0.3"
+    }
+  }
