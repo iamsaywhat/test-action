@@ -24,11 +24,11 @@ async function run() {
       const octokit = github.getOctokit(githubToken)
 
       // console.info("getPullRequestFromGithubRef: " +  getPullRequestFromGithubRef())
-      // console.info("getPullRequestNumberFromEventPath: " +  getPullRequestNumberFromEventPath())
-      console.info("number: " + github.context.issue.number)
+      // // console.info("getPullRequestNumberFromEventPath: " +  getPullRequestNumberFromEventPath())
+      // console.info("number: " + github.context.issue.number)
 
-      console.info("owner: " + github.context.repo.owner)
-      console.info("repo: " + github.context.repo.repo)
+      // console.info("owner: " + github.context.repo.owner)
+      // console.info("repo: " + github.context.repo.repo)
 
       const data = await octokit.rest.pulls.get({
         owner: github.context.repo.owner,
@@ -36,7 +36,7 @@ async function run() {
         pull_number: github.context.issue.number,
       });
 
-      console.info(data)
+      // console.info(data)
 
       octokit.rest.pulls.update({
         owner: github.context.repo.owner,
@@ -45,6 +45,7 @@ async function run() {
         body: data.data.body + "YOOOOO"
       })
 
+      console.warn("run_id: " + github.context.runId)
 
       const resp = await octokit.rest.actions.listWorkflowRunArtifacts({
         owner: github.context.repo.owner,
@@ -52,8 +53,8 @@ async function run() {
         run_id: github.context.runId
       });
 
-      const number = resp.total_count
-      const artifacts = resp.artifacts
+      const number = resp.data.total_count
+      const artifacts = resp.data.artifacts
       console.info("number: " + number)
       console.info("artifacts: " + artifacts)
 
