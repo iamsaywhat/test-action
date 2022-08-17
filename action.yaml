@@ -1,0 +1,11 @@
+name: 'Test PR description editing'
+description: 'Test PR description editing'
+author: 'me'
+runs:
+  using: 'node16'
+  pre: 'install-deps.js'
+  main: 'index.js'
+inputs:
+  github_token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
