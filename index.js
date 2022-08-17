@@ -46,12 +46,15 @@ async function run() {
       })
 
 
-      const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
+      const resp = await octokit.rest.actions.listWorkflowRunArtifacts({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         run_id: github.context.runId
       });
 
+      const number = resp.total_count
+      const artifacts = resp.artifacts
+      console.info("number: " + number)
       console.info("artifacts: " + artifacts)
 
     } catch (error) {
