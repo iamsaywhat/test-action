@@ -1,25 +1,59 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+function getPullRequestFromGithubRef() {
+  const result = /refs\/pull\/(\d+)\/merge/g.exec(process.env.GITHUB_REF);
+  if (!result) throw new Error("Reference not found.");
+  const [, pullRequestId] = result;
+  return pullRequestId;
+}
+
+function getPullRequestNumberFromEventPath() {
+  const fs = require('fs')
+  const ev = JSON.parse(
+    fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
+  )
+  // console.warn(ev)
+  return ev.pull_request.number
+}
+
 async function run() {
     try {
 
       const githubToken = core.getInput('github_token');
       const octokit = github.getOctokit(githubToken)
 
-      // You can also pass in additional options as a second parameter to getOctokit
-      // const octokit = github.getOctokit(myToken, {userAgent: "MyActionVersion1"});
-  
-      const { data: pullRequest } = await octokit.rest.pulls.get({
-          owner: 'octokit',
-          repo: 'rest.js',
-          pull_number: 123,
-          mediaType: {
-            format: 'diff'
-          }
+      // console.info("getPullRequestFromGithubRef: " +  getPullRequestFromGithubRef())
+      // console.info("getPullRequestNumberFromEventPath: " +  getPullRequestNumberFromEventPath())
+      console.info("number: " + github.context.issue.number)
+
+      console.info("owner: " + github.context.repo.owner)
+      console.info("repo: " + github.context.repo.repo)
+
+      const data = await octokit.rest.pulls.get({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        pull_number: github.context.issue.number,
       });
-  
-      console.log(pullRequest);
+
+      console.info(data)
+
+      octokit.rest.pulls.update({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        pull_number: github.context.issue.number,
+        body: data.data.body + "YOOOOO"
+      })
+
+
+      const artifacts = await octokit.rest.actions.listWorkflowRunArtifacts({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        run_id: github.context.runId
+      });
+
+      console.info("artifacts: " + artifacts)
+
     } catch (error) {
       core.setFailed(error.message);
     }
